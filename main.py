@@ -1,3 +1,6 @@
 import PySimpleGUI as sg
 
-print('Hello World')
+layout = [[sg.Text("This is a line of text")], [sg.Text("This is another line of text")]]
+window = sg.Window("daily_gui", layout)
+
+window.read()
