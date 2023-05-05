@@ -43,7 +43,7 @@ def draw_figure(canvas, figure):
 ###Construct GUI ###
 
 layout = [[sg.Text("This is a line of text")], [sg.Text(temps[0])], [sg.Canvas(key='figCanvas')]]
-_VARS['window'] = sg.Window("daily_gui", layout)
+_VARS['window'] = sg.Window("daily_gui", layout, finalize=True)
 
 
 
