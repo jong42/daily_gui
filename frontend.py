@@ -20,11 +20,15 @@ def init_gui():
     window = sg.Window("daily_gui", layout, finalize=True)
     return window
 
-def add_fig_to_gui(gui, x:List, y:List):
+def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     """
-    Add a pyplot figure to an existing GUI created with PySimpleGUI
+    Add pyplot figures to an existing GUI created with PySimpleGUI
     """
-    fig = plt.figure()
-    plt.plot(x, y)
+
+    fig, axs = plt.subplots(1, 2)
+    axs[0].plot(timestamps, temps)
+    axs[1].plot(timestamps, prec_probs)
+    axs[0].set_title('Temperature')
+    axs[1].set_title('Precipitation Probability')
     # Instead of plt.show
     draw_figure(gui['figCanvas'].TKCanvas, fig)
