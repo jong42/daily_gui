@@ -16,10 +16,9 @@ def init_gui():
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
     """
-    _VARS = {'window': False}
     layout = [[sg.Text("This is a line of text")], [sg.Canvas(key='figCanvas')]]
-    _VARS['window'] = sg.Window("daily_gui", layout, finalize=True)
-    return _VARS
+    window = sg.Window("daily_gui", layout, finalize=True)
+    return window
 
 def add_fig_to_gui(gui, x:List, y:List):
     """
@@ -28,4 +27,4 @@ def add_fig_to_gui(gui, x:List, y:List):
     fig = plt.figure()
     plt.plot(x, y)
     # Instead of plt.show
-    draw_figure(gui['window']['figCanvas'].TKCanvas, fig)
+    draw_figure(gui['figCanvas'].TKCanvas, fig)
