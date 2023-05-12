@@ -26,7 +26,7 @@ def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     Add pyplot figures to an existing GUI created with PySimpleGUI
     """
 
-    fig, axs = plt.subplots(1, 2)
+    fig, axs = plt.subplots(1, 2, figsize=(16, 9))
     axs[0].plot(timestamps, temps)
     axs[1].plot(timestamps, prec_probs)
     axs[0].set_title('Temperature')
