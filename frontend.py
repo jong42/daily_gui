@@ -41,5 +41,13 @@ def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     label_text_new = [i[5:-3] for i in label_text_org]
     [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
     axs[0].set_xticks(xtick_positions, xtick_labels)
+    xtick_positions = axs[1].get_xticks()[0::stepsize]
+    xtick_positions.append(axs[1].get_xticks()[-1])
+    xtick_labels = axs[1].get_xticklabels()[0::stepsize]
+    xtick_labels.append(axs[1].get_xticklabels()[-1])
+    label_text_org = [i.get_text() for i in xtick_labels]
+    label_text_new = [i[5:-3] for i in label_text_org]
+    [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
+    axs[1].set_xticks(xtick_positions, xtick_labels)
     # Instead of plt.show
     draw_figure(gui['figCanvas'].TKCanvas, fig)
