@@ -2,22 +2,28 @@ import os
 import json
 import requests
 import datetime
+import numpy as np
 from backend import extract_vals_from_dict
 from frontend import init_gui, add_figs_to_gui
 
 location = "Jena"
-
+weather_data_path = "/home/jonas/Desktop/daily_gui/data/weather_data/"
 # Check if data has already been downloaded today
 now = datetime.datetime.now()
-weatherfiles = os.listdir("/home/jonas/Desktop/daily_gui/data/weather_data/")
+weatherfiles = os.listdir(weather_data_path)
 date_now = now.strftime("%Y_%m_%d")
-already_downloaded = any([date_now in filename for filename in weatherfiles])
+already_downloaded = np.where([date_now in i for i in weatherfiles])
 
-if not already_downloaded:
+if already_downloaded:
+    filename = weatherfiles[already_downloaded[0][0]]
+    filepath = os.path.join(weather_data_path, filename)
+else:
+    print('Failed')
     # Download and store data
     api_address = "api.openweathermap.org/data/2.5/forecast?q=" + location + ",units=metric,ger&appid=ca3c615c20062c4fed7b25374cb16a77"
     api_result = requests.get(api_address)
-    filepath = now.strftime("%Y_%m_%d_%H_%M_") + location + ".json"
+    filename = now.strftime("%Y_%m_%d_%H_%M_") + location + ".json"
+    filepath = os.path.join(weather_data_path, filename)
     with open(filepath,"w") as fp:
         json.dump(api_result, fp)
 
