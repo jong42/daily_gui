@@ -1,4 +1,5 @@
 from typing import List
+import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import PySimpleGUI as sg
@@ -30,5 +31,13 @@ def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     axs[1].plot(timestamps, prec_probs)
     axs[0].set_title('Temperature')
     axs[1].set_title('Precipitation Probability')
+    # Adjust axis labels
+    stepsize = 8
+    xtick_positions = axs[0].get_xticks()[0::stepsize]
+    xtick_labels = axs[0].get_xticklabels()[0::stepsize]
+    label_text_org = [i.get_text() for i in xtick_labels]
+    label_text_new = [i[5:-3] for i in label_text_org]
+    [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
+    axs[0].set_xticks(xtick_positions, xtick_labels)
     # Instead of plt.show
     draw_figure(gui['figCanvas'].TKCanvas, fig)
