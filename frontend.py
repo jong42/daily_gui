@@ -34,7 +34,9 @@ def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     # Adjust axis labels
     stepsize = 8
     xtick_positions = axs[0].get_xticks()[0::stepsize]
+    xtick_positions.append(axs[0].get_xticks()[-1])
     xtick_labels = axs[0].get_xticklabels()[0::stepsize]
+    xtick_labels.append(axs[0].get_xticklabels()[-1])
     label_text_org = [i.get_text() for i in xtick_labels]
     label_text_new = [i[5:-3] for i in label_text_org]
     [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
