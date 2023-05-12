@@ -15,9 +15,9 @@ api_result = json.load(f)
 timestamps, temps, weather, prec_probs = extract_vals_from_dict(api_result)
 
 # Construct GUI
-_VARS = init_gui()
-add_figs_to_gui(_VARS, timestamps, temps, prec_probs)
+gui = init_gui()
+add_figs_to_gui(gui, timestamps, temps, prec_probs)
 
 # show GUI
-_VARS.read()
-_VARS.close()
+gui.read()
+gui.close()
