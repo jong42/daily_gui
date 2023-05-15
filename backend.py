@@ -1,5 +1,11 @@
 
 from typing import List
+
+def kelvin_to_celsius(deg_k:float)->float:
+    """ Converts a float from kelvin to celsius scale"""
+    deg_c = deg_k - 273.15
+    return deg_c
+
 def extract_vals_from_dict(d:dict) -> [List,List,List,List]:
     """
     Extract data on time stamps, temperature, weather status and precipitation probability from dictionary downloaded
@@ -19,7 +25,7 @@ def extract_vals_from_dict(d:dict) -> [List,List,List,List]:
 
     for entry in d['list']:
         timestamp = entry['dt_txt']
-        temp = entry['main']['temp']
+        temp = kelvin_to_celsius(entry['main']['temp'])
         weather_status = entry['weather'][0]['description']
         prec_prob = entry['pop']
 
