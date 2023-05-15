@@ -25,9 +25,9 @@ def add_figs_to_gui(gui, timestamps:List, temps:List, prec_probs:List):
     """
     Add pyplot figures to an existing GUI created with PySimpleGUI
     """
-
+    # TODO Combine temp and prec_prob into one plot with different axis
     fig, axs = plt.subplots(1, 2, figsize=(16, 9))
-    axs[0].plot(timestamps, temps)
+    axs[0].plot(timestamps, temps, color='red')
     axs[1].plot(timestamps, prec_probs)
     axs[0].set_title('Temperature')
     axs[1].set_title('Precipitation Probability')
