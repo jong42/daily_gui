@@ -19,7 +19,7 @@ if any(already_downloaded):
     filepath = os.path.join(weather_data_path, filename)
 else:
     # Download and store data
-    api_address = "https://api.openweathermap.org/data/2.5/forecast?q=" + location + ",units=metric,ger&appid=ca3c615c20062c4fed7b25374cb16a77"
+    api_address = "https://api.openweathermap.org/data/2.5/forecast?q=" + location + ",ger&appid=ca3c615c20062c4fed7b25374cb16a77"
     api_result = requests.get(api_address)
     filename = now.strftime("%Y_%m_%d_%H_%M_") + location + ".json"
     filepath = os.path.join(weather_data_path, filename)
