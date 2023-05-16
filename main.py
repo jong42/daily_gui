@@ -7,12 +7,11 @@ from frontend import init_gui, add_figs_to_gui
 location = "Jena"
 weather_data_path = "/home/jonas/Desktop/daily_gui/data/weather_data/"
 now = datetime.datetime.now()
-date_now = now.strftime("%Y_%m_%d_")
-filename = date_now + location + ".json"
+filename = now.strftime("%Y_%m_%d_") + location + ".json"
 filepath = os.path.join(weather_data_path, filename)
 
 # Check if data has already been downloaded today
-already_downloaded = check_filenames(weather_data_path, date_now)
+already_downloaded = check_filenames(weather_data_path, filename)
 
 # Download data if necessary
 if not already_downloaded:
