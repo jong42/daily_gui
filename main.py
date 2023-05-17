@@ -14,7 +14,7 @@ filepath = os.path.join(weather_data_path, filename)
 already_downloaded = check_filenames(weather_data_path, filename)
 
 # Download data if necessary
-if not already_downloaded:
+if len(already_downloaded) == 0:
     download_weather_data(location, filepath)
 
 # Load data
