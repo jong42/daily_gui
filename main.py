@@ -53,12 +53,8 @@ layout = init_layout()
 layout.append([sg.Text("This is text")])
 gui = init_gui(layout)
 
-
-test_string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-
-
 # gui = init_gui()
-add_figs_to_gui(gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps)
+add_figs_to_gui(gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps)  # thisisarandomcomment
 
 # show GUI
 gui.read()
