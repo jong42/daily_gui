@@ -3,6 +3,7 @@ from typing import Tuple, List
 import requests
 import json
 import numpy as np
+import matplotlib.pyplot as plt
 
 
 def check_filenames(path: str, pattern: str) -> np.ndarray:
@@ -109,3 +110,15 @@ def get_minmax_values(
         minmax_temps.append(min_temp)
 
         return minmax_timestamps, minmax_temps
+
+
+def get_weather_symbols(weather: List[str], path: str) -> List:
+    """
+    create a list of images where each image is specified by its name in a list
+    :param weather: list of strings. names of the image files
+    :param path: string. path to the image files
+    :return: symbols. List of Images. Has the same length as weather
+    """
+    paths = [os.path.join(path, weather_status + ".png") for weather_status in weather]
+    symbols = [plt.imread(symbol_path) for symbol_path in paths]
+    return symbols

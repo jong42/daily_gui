@@ -1,8 +1,9 @@
 from typing import List
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import PySimpleGUI as sg
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 
 
 def draw_figure(canvas, figure):
@@ -36,6 +37,32 @@ def init_gui(layout):
     return window
 
 
+def plot_images(x, y, images, ax=None):
+    """
+    Creates a scatterplot with custom marker symbols from png files
+    Taken from https://stackoverflow.com/questions/2318288/how-to-use-custom-png-image-marker-with-plot
+    :param x:
+    :param y:
+    :param images:
+    :param ax:
+    :return:
+    """
+    ax = ax or plt.gca()
+
+    for xi, yi, image in zip(x, y, images):
+        im = OffsetImage(image, zoom=0.1)
+        im.image.axes = ax
+
+        ab = AnnotationBbox(
+            im,
+            (xi, yi),
+            frameon=False,
+            pad=0.0,
+        )
+
+        ax.add_artist(ab)
+
+
 def add_figs_to_gui(
     gui,
     timestamps: List,
@@ -43,6 +70,7 @@ def add_figs_to_gui(
     prec_probs: List,
     minmax_timestamps: List,
     minmax_temps: List,
+    symbols: List,
 ):
     """
     Add pyplot figures to an existing GUI created with PySimpleGUI
@@ -53,6 +81,8 @@ def add_figs_to_gui(
     axs[0].plot(timestamps, temps, color="red")
     axs[0].scatter(timestamps, temps)
     axs[0].scatter(minmax_timestamps, minmax_temps)
+    # Replace plot markers by custom symbols
+    plot_images(timestamps, temps, symbols, ax=axs[0])
     # Label points
     for x, y in zip(minmax_timestamps, minmax_temps):
         axs[0].text(x, y, str(y)[0:4])
