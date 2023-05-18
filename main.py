@@ -54,7 +54,9 @@ layout.append([sg.Text("This is text")])
 gui = init_gui(layout)
 
 # gui = init_gui()
-add_figs_to_gui(gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps)  # randomcomment
+add_figs_to_gui(
+    gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps
+)  # randomcomment
 
 # show GUI
 gui.read()
