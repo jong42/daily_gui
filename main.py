@@ -50,14 +50,14 @@ for date in unique_dates:
 
 # Construct GUI
 layout = init_layout()
-layout.append([sg.Text('This is text')])
+layout.append([sg.Text("This is text")])
 gui = init_gui(layout)
 
 
-test_string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+test_string = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 
 
-#gui = init_gui()
+# gui = init_gui()
 add_figs_to_gui(gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps)
 
 # show GUI
