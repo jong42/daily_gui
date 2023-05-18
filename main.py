@@ -30,7 +30,6 @@ api_result = json.load(f)
 
 # Extract values
 timestamps, temps, weather, prec_probs = extract_vals_from_dict(api_result)
-from typing import List, Tuple
 
 # Get min and max temperature per day
 minmax_timestamps, minmax_temps = get_minmax_values(timestamps, temps)
