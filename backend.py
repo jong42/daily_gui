@@ -28,14 +28,18 @@ def download_weather_data(location: str, filepath: str) -> None:
     :param filepath: path where the result is saved to
     :return:
     """
-    api_address = "https://api.openweathermap.org/data/2.5/forecast?q=" + location + ",ger&appid=ca3c615c20062c4fed7b25374cb16a77"
+    api_address = (
+        "https://api.openweathermap.org/data/2.5/forecast?q="
+        + location
+        + ",ger&appid=ca3c615c20062c4fed7b25374cb16a77"
+    )
     api_result = requests.get(api_address)
     with open(filepath, "w") as fp:
         json.dump(api_result.json(), fp)
 
 
 def kelvin_to_celsius(deg_k: float) -> float:
-    """ Converts a float from kelvin to celsius scale"""
+    """Converts a float from kelvin to celsius scale"""
     deg_c = deg_k - 273.15
     return deg_c
 
@@ -57,11 +61,11 @@ def extract_vals_from_dict(d: dict) -> [List, List, List, List]:
     weather = []
     prec_probs = []
 
-    for entry in d['list']:
-        timestamp = entry['dt_txt']
-        temp = kelvin_to_celsius(entry['main']['temp'])
-        weather_status = entry['weather'][0]['description']
-        prec_prob = entry['pop']
+    for entry in d["list"]:
+        timestamp = entry["dt_txt"]
+        temp = kelvin_to_celsius(entry["main"]["temp"])
+        weather_status = entry["weather"][0]["description"]
+        prec_prob = entry["pop"]
 
         timestamps.append(timestamp)
         temps.append(temp)
