@@ -1,5 +1,5 @@
 import os
-from typing import List
+from typing import Tuple, List
 import requests
 import json
 import numpy as np
@@ -73,3 +73,39 @@ def extract_vals_from_dict(d: dict) -> [List, List, List, List]:
         prec_probs.append(prec_prob)
 
     return timestamps, temps, weather, prec_probs
+
+
+def get_minmax_values(
+    timestamps: List[str], temps: List[float]
+) -> Tuple[List[str], List[float]]:
+    """
+    From two given lists of timestamps and values, extract the minimum and maximum value for each day and
+    the corresponding timestamp
+
+    :param timestamps: List of strings. The timestamps.
+    :param temps: List of floats. The values from which to extract min and max values per day
+    :return: minmax_timestamps: List of strings. list of timestamps corresponding to minmax_temps
+             minmax_temps: List of floats. Minimum and Maximum value from temps for each day
+    """
+    minmax_timestamps = []
+    minmax_temps = []
+    unique_dates = np.unique([i[0:10] for i in timestamps])
+    for date in unique_dates:
+        # Get all data points corresponding to a given date
+        sub_timestamp_indices = np.asarray([date in i for i in timestamps]).nonzero()[0]
+        sub_timestamps = [timestamps[i] for i in sub_timestamp_indices]
+        sub_temps = [temps[i] for i in sub_timestamp_indices]
+        # Get exact timestamp and temperature for max and min temperature on that date
+        max_temp = np.max(sub_temps)
+        min_temp = np.min(sub_temps)
+        max_temp_index = sub_temps.index(max_temp)
+        min_temp_index = sub_temps.index(min_temp)
+        max_temp_timestamp = sub_timestamps[max_temp_index]
+        min_temp_timestamp = sub_timestamps[min_temp_index]
+        # Add results to corresponding lists
+        minmax_timestamps.append(max_temp_timestamp)
+        minmax_timestamps.append(min_temp_timestamp)
+        minmax_temps.append(max_temp)
+        minmax_temps.append(min_temp)
+
+        return minmax_timestamps, minmax_temps
