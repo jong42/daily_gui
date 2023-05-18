@@ -109,7 +109,7 @@ def get_minmax_values(
         minmax_temps.append(max_temp)
         minmax_temps.append(min_temp)
 
-        return minmax_timestamps, minmax_temps
+    return minmax_timestamps, minmax_temps
 
 
 def get_weather_symbols(weather: List[str], path: str) -> List:
