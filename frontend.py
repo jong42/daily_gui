@@ -77,35 +77,29 @@ def add_figs_to_gui(
     """
     # TODO Combine temp and prec_prob into one plot with different axis
     # TODO: Write proper docstrings for all the functions here
-    fig, axs = plt.subplots(1, 2, figsize=(16, 9))
-    axs[0].plot(timestamps, temps, color="red")
-    axs[0].scatter(timestamps, temps)
-    axs[0].scatter(minmax_timestamps, minmax_temps)
+    fig, ax1 = plt.subplots()
+    ax1.plot(timestamps, temps, color="red")
+    ax1.scatter(timestamps, temps)
+    ax1.scatter(minmax_timestamps, minmax_temps)
     # Replace plot markers by custom symbols
-    plot_images(timestamps, temps, symbols, ax=axs[0])
+    plot_images(timestamps, temps, symbols, ax=ax1)
     # Label points
     for x, y in zip(minmax_timestamps, minmax_temps):
-        axs[0].text(x, y, str(y)[0:4])
-    axs[1].plot(timestamps, prec_probs)
-    axs[0].set_title("Temperature")
-    axs[1].set_title("Precipitation Probability")
+        ax1.text(x, y, str(y)[0:4])
+    # Add precipitation probabilitiy plot
+    ax2 = ax1.twinx()
+    ax2.plot(timestamps, prec_probs)
     # Adjust axis labels
     stepsize = 8
-    xtick_positions = axs[0].get_xticks()[0::stepsize]
-    xtick_positions.append(axs[0].get_xticks()[-1])
-    xtick_labels = axs[0].get_xticklabels()[0::stepsize]
-    xtick_labels.append(axs[0].get_xticklabels()[-1])
+    xtick_positions = ax1.get_xticks()[0::stepsize]
+    xtick_positions.append(ax1.get_xticks()[-1])
+    xtick_labels = ax1.get_xticklabels()[0::stepsize]
+    xtick_labels.append(ax1.get_xticklabels()[-1])
     label_text_org = [i.get_text() for i in xtick_labels]
     label_text_new = [i[5:-3] for i in label_text_org]
     [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
-    axs[0].set_xticks(xtick_positions, xtick_labels)
-    xtick_positions = axs[1].get_xticks()[0::stepsize]
-    xtick_positions.append(axs[1].get_xticks()[-1])
-    xtick_labels = axs[1].get_xticklabels()[0::stepsize]
-    xtick_labels.append(axs[1].get_xticklabels()[-1])
-    label_text_org = [i.get_text() for i in xtick_labels]
-    label_text_new = [i[5:-3] for i in label_text_org]
-    [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
-    axs[1].set_xticks(xtick_positions, xtick_labels)
+    ax1.set_xticks(xtick_positions, xtick_labels)
+    ax1.set_ylabel('Temperature (degrees celsius)', color="red")
+    ax2.set_ylabel('Precipitation Probability', color='blue')
     # Instead of plt.show
     draw_figure(gui["figCanvas"].TKCanvas, fig)
