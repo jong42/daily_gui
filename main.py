@@ -42,7 +42,6 @@ minmax_timestamps, minmax_temps = get_minmax_values(timestamps, temps)
 
 # Construct GUI
 layout = init_layout()
-layout.append([sg.Text("This is a line of text")])
 gui = init_gui(layout)
 symbols = get_weather_symbols(weather, weather_symbols_path)
 add_fig_to_gui(
