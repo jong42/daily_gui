@@ -33,7 +33,7 @@ def init_gui(layout):
     layout: PySimpleGUI layout
     """
     # layout = [[sg.Text("This is a line of text")], [sg.Canvas(key='figCanvas')]]
-    window = sg.Window("daily_gui", layout, finalize=True)
+    window = sg.Window("daily_gui", layout, resizable=True, finalize=True)
     return window
 
 
@@ -75,7 +75,6 @@ def add_figs_to_gui(
     """
     Add pyplot figures to an existing GUI created with PySimpleGUI
     """
-    # TODO Combine temp and prec_prob into one plot with different axis
     # TODO: Write proper docstrings for all the functions here
     fig, ax1 = plt.subplots()
     ax1.plot(timestamps, temps, color="red")
