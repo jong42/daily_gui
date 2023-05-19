@@ -1,12 +1,13 @@
-from typing import List
+from typing import List, Any
 import numpy as np
+from tkinter import Canvas
 import matplotlib.pyplot as plt
-import PySimpleGUI as sg
+from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
+import PySimpleGUI as sg
 
-
-def draw_figure(canvas, figure):
+def draw_figure(canvas: Canvas, figure: Figure)->FigureCanvasTkAgg:
     """
     helper function to integrate pyplot figures into PySimpleGUI
     """
@@ -16,36 +17,36 @@ def draw_figure(canvas, figure):
     return figure_canvas_agg
 
 
-def init_layout():
+def init_layout()->List[List[sg.PySimpleGUI.Canvas]]:
     """
     Initialize a layout with a blank canvas for a matplotlib plot. For adding contents to the canvas, init_gui() has
     to be called, then figures can be added with add_fig_to_gui()
-    :return: layout. a PySimpleGUI layout
+    :return: layout. list of lists containing a PySimpleGUI Canvas
     """
     layout = [[sg.Canvas(key="figCanvas")]]
     return layout
 
 
-def init_gui(layout):
+def init_gui(layout:List[List[sg.PySimpleGUI.Canvas]])->sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
-    layout: PySimpleGUI layout
+    :param layout: list of lists containing a PySimpleGUI Canvas. A basic blank canvas
+    :returns: window. PySimpleGUI window.
+
     """
     # layout = [[sg.Text("This is a line of text")], [sg.Canvas(key='figCanvas')]]
     window = sg.Window("daily_gui", layout, resizable=True, finalize=True)
     return window
 
 
-def plot_images(x, y, images, ax=None):
+def plot_images(x:List[Any], y:List[Any], images:List[np.ndarray], ax=None)-> None:
     """
     Creates a scatterplot with custom marker symbols from png files
     Taken from https://stackoverflow.com/questions/2318288/how-to-use-custom-png-image-marker-with-plot
-    :param x:
-    :param y:
-    :param images:
-    :param ax:
-    :return:
+    :param x: List. The x values to be plotted
+    :param y: List. The y values to be plotted
+    :param images: List of numpy arrays. The images to be used as point markers
     """
     ax = ax or plt.gca()
 
@@ -63,19 +64,25 @@ def plot_images(x, y, images, ax=None):
         ax.add_artist(ab)
 
 
-def add_figs_to_gui(
-    gui,
-    timestamps: List,
-    temps: List,
-    prec_probs: List,
-    minmax_timestamps: List,
-    minmax_temps: List,
-    symbols: List,
-):
+def add_fig_to_gui(
+    gui: sg.Window,
+    timestamps: List[str],
+    temps: List[float],
+    prec_probs: List[float],
+    minmax_timestamps: List[str],
+    minmax_temps: List[float],
+    symbols: List[np.ndarray],
+)-> None:
     """
-    Add pyplot figures to an existing GUI created with PySimpleGUI
+    Add  apyplot figure to an existing GUI created with PySimpleGUI
+    :param gui: sg.Window
+    :param timestamps: List of strings. the x-axis values for the figure
+    :param temps: List of floats. The y-axis values for the figure
+    :param prec_probs: List of floats. values for the second y-axis of the figure
+    :param minmax_timestamps: List of strings. x-values of points that should be labeled
+    :param minmax_temps: List of floats. y-values of points that should be labeled
+    :param symbols: List of numpy arrays. The symbols that should replace the point markers
     """
-    # TODO: Write proper docstrings for all the functions here
     fig, ax1 = plt.subplots()
     ax1.plot(timestamps, temps, color="red")
     ax1.scatter(timestamps, temps)

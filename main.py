@@ -9,7 +9,7 @@ from backend import (
     get_minmax_values,
     get_weather_symbols,
 )
-from frontend import init_layout, init_gui, add_figs_to_gui
+from frontend import init_layout, init_gui, add_fig_to_gui
 
 location = "Jena"
 weather_data_path = "/home/jonas/Desktop/daily_gui/data/weather_data/"
@@ -45,7 +45,7 @@ layout = init_layout()
 layout.append([sg.Text("This is a line of text")])
 gui = init_gui(layout)
 symbols = get_weather_symbols(weather, weather_symbols_path)
-add_figs_to_gui(
+add_fig_to_gui(
     gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps, symbols
 )
 
