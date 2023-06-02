@@ -7,7 +7,8 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import PySimpleGUI as sg
 
-def draw_figure(canvas: Canvas, figure: Figure)->FigureCanvasTkAgg:
+
+def draw_figure(canvas: Canvas, figure: Figure) -> FigureCanvasTkAgg:
     """
     helper function to integrate pyplot figures into PySimpleGUI
     """
@@ -17,7 +18,7 @@ def draw_figure(canvas: Canvas, figure: Figure)->FigureCanvasTkAgg:
     return figure_canvas_agg
 
 
-def init_layout()->List[List[sg.PySimpleGUI.Canvas]]:
+def init_layout() -> List[List[sg.PySimpleGUI.Canvas]]:
     """
     Initialize a layout with a blank canvas for a matplotlib plot. For adding contents to the canvas, init_gui() has
     to be called, then figures can be added with add_fig_to_gui()
@@ -27,7 +28,7 @@ def init_layout()->List[List[sg.PySimpleGUI.Canvas]]:
     return layout
 
 
-def init_gui(layout:List[List[sg.PySimpleGUI.Canvas]])->sg.Window:
+def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]]) -> sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
@@ -35,12 +36,19 @@ def init_gui(layout:List[List[sg.PySimpleGUI.Canvas]])->sg.Window:
     :returns: window. PySimpleGUI window.
 
     """
-    # layout = [[sg.Text("This is a line of text")], [sg.Canvas(key='figCanvas')]]
-    window = sg.Window("daily_gui", layout, resizable=True, finalize=True)
+    recipes_layout = [[sg.Text("This is a line of text")]]
+    tabgrp = [
+        [
+            sg.TabGroup(
+                [[sg.Tab("Weather", layout)], [sg.Tab("Recipes", recipes_layout)]]
+            )
+        ]
+    ]
+    window = sg.Window("daily_gui", tabgrp, resizable=True, finalize=True)
     return window
 
 
-def plot_images(x:List[Any], y:List[Any], images:List[np.ndarray], ax=None)-> None:
+def plot_images(x: List[Any], y: List[Any], images: List[np.ndarray], ax=None) -> None:
     """
     Creates a scatterplot with custom marker symbols from png files
     Taken from https://stackoverflow.com/questions/2318288/how-to-use-custom-png-image-marker-with-plot
@@ -72,7 +80,7 @@ def add_fig_to_gui(
     minmax_timestamps: List[str],
     minmax_temps: List[float],
     symbols: List[np.ndarray],
-)-> None:
+) -> None:
     """
     Add  apyplot figure to an existing GUI created with PySimpleGUI
     :param gui: sg.Window
@@ -105,7 +113,7 @@ def add_fig_to_gui(
     label_text_new = [i[5:-3] for i in label_text_org]
     [label.set_text(new_text) for label, new_text in zip(xtick_labels, label_text_new)]
     ax1.set_xticks(xtick_positions, xtick_labels)
-    ax1.set_ylabel('Temperature (degrees celsius)', color="red")
-    ax2.set_ylabel('Precipitation Probability', color='blue')
+    ax1.set_ylabel("Temperature (degrees celsius)", color="red")
+    ax2.set_ylabel("Precipitation Probability", color="blue")
     # Instead of plt.show
     draw_figure(gui["figCanvas"].TKCanvas, fig)
