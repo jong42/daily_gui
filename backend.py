@@ -3,6 +3,7 @@ from typing import Tuple, List
 import requests
 import json
 import numpy as np
+import datetime
 import matplotlib.pyplot as plt
 
 
@@ -45,7 +46,7 @@ def kelvin_to_celsius(deg_k: float) -> float:
     return deg_c
 
 
-def extract_vals_from_dict(d: dict) -> [List, List, List, List]:
+def extract_vals_from_dict(d: dict) -> Tuple[List, List, List, List]:
     """
     Extract data on time stamps, temperature, weather status and precipitation probability from dictionary downloaded
     from openweathermap
@@ -122,3 +123,39 @@ def get_weather_symbols(weather: List[str], path: str) -> List:
     paths = [os.path.join(path, weather_status + ".png") for weather_status in weather]
     symbols = [plt.imread(symbol_path) for symbol_path in paths]
     return symbols
+
+
+def get_weather_data(weather_data_path: str, location: str) -> Tuple[List[str], List[float], List[str], List[float]]:
+    """
+    Checks if weather data was already downloaded for the current day. Downloads weather data if this is not the case.
+    Returns the first 20 values of the weather data
+    :param weather_data_path: string. Path where to load and save the weather data
+    :param location: string. location name for which the forecast is requested
+    :return:
+        timestamps: list of timestamps
+        temps: list of temperature values
+        weather_status: list of weather status values
+        prec_probs: list of precipitation probabilities
+    """
+    now = datetime.datetime.now()
+    filename = now.strftime("%Y_%m_%d_") + location + ".json"
+    filepath = os.path.join(weather_data_path, filename)
+    # Check if data has already been downloaded today
+    already_downloaded = check_filenames(weather_data_path, filename)
+
+    # Download data if necessary
+    if len(already_downloaded) == 0:
+        download_weather_data(location, filepath)
+
+    # Load data
+    f = open(filepath)
+    api_result = json.load(f)
+
+    # Extract values
+    timestamps, temps, weather, prec_probs = extract_vals_from_dict(api_result)
+
+    timestamps = timestamps[0:20]
+    temps = temps[0:20]
+    weather = weather[0:20]
+    prec_probs = prec_probs[0:20]
+    return timestamps, temps, weather, prec_probs
