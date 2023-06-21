@@ -1,3 +1,4 @@
+import PySimpleGUI as sg
 from backend import (
     get_weather_data,
     get_minmax_values,
@@ -27,5 +28,22 @@ add_fig_to_gui(
 )
 
 # show GUI
-gui.read()
+while True:
+    event, values = gui.read()
+    if event in (sg.WIN_CLOSED, 'Cancel'):
+        break
+    elif event == '-LIST-':
+        update_name = values['-LIST-'][0]
+        update_ingredients = recipes[update_name].ingredients
+        update_preparation = recipes[update_name].preparation
+        gui['-NAME-'].update(update_name)
+        gui['-INGREDIENTS-'].update(update_ingredients)
+        gui['-PREPARATION-'].update(update_preparation)
 gui.close()
+
+
+
+
+
+
+

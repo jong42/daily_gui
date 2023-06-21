@@ -28,7 +28,7 @@ def init_layout() -> List[List[sg.PySimpleGUI.Canvas]]:
     return layout
 
 
-def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:Dict) -> sg.Window:
+def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:List) -> sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
@@ -36,7 +36,16 @@ def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:Dict) -> sg.Wind
     :returns: window. PySimpleGUI window.
 
     """
-    recipes_layout = [[sg.Text(recipes['Reis mit Fisch'].name)]]
+    recnames = [v.name for k,v in recipes.items()]
+
+    left_col = [[sg.Listbox(values = recnames, size=(20, 10), key='-LIST-', enable_events=True)]]
+    right_col = [[sg.Text(key='-NAME-')],
+                [sg.Text(key='-INGREDIENTS-')],
+                [sg.Text(key='-PREPARATION-')]
+                ]
+
+    recipes_layout = [[sg.Column(left_col), sg.Column(right_col)]]
+
     tabgrp = [
         [
             sg.TabGroup(

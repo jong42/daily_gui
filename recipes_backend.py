@@ -17,7 +17,7 @@ def load_recipes_from_json(path:str) -> Dict:
             ingredients = recipes_json[entry]['ingredients']
             preparation = recipes_json[entry]['preparation']
             recipes[name] = Recipe(name, ingredients, preparation)
-            return recipes
+    return recipes
 
 if __name__ == "__main__":
     recipes_path = "/home/jonas/Desktop/daily_gui/data/recipes.json"
