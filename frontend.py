@@ -1,4 +1,4 @@
-from typing import List, Any
+from typing import List, Any, Dict
 import numpy as np
 from tkinter import Canvas
 import matplotlib.pyplot as plt
@@ -28,7 +28,7 @@ def init_layout() -> List[List[sg.PySimpleGUI.Canvas]]:
     return layout
 
 
-def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]]) -> sg.Window:
+def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:Dict) -> sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
@@ -36,7 +36,7 @@ def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]]) -> sg.Window:
     :returns: window. PySimpleGUI window.
 
     """
-    recipes_layout = [[sg.Text("This is a line of text")]]
+    recipes_layout = [[sg.Text(recipes['Reis mit Fisch'].name)]]
     tabgrp = [
         [
             sg.TabGroup(

@@ -3,6 +3,7 @@ from backend import (
     get_minmax_values,
     get_weather_symbols,
 )
+from recipes_backend import load_recipes_from_json
 from frontend import init_layout, init_gui, add_fig_to_gui
 
 location = "Jena"
@@ -15,9 +16,12 @@ timestamps, temps, weather, prec_probs = get_weather_data(weather_data_path, loc
 minmax_timestamps, minmax_temps = get_minmax_values(timestamps, temps)
 symbols = get_weather_symbols(weather, weather_symbols_path)
 
+# Get recipes
+recipes = load_recipes_from_json(recipes_path)
+
 # Construct GUI
 layout = init_layout()
-gui = init_gui(layout)
+gui = init_gui(layout, recipes)
 add_fig_to_gui(
     gui, timestamps, temps, prec_probs, minmax_timestamps, minmax_temps, symbols
 )
