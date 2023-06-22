@@ -35,9 +35,14 @@ while True:
     elif event == '-LIST-':
         update_name = values['-LIST-'][0]
         update_ingredients = recipes[update_name].ingredients
+        for i, ingredient in enumerate(update_ingredients):
+            element_name = '-INGREDIENTS' + str(i) + '-'
+            gui[element_name].update(ingredient)
+        for i in range(10 - len(update_ingredients)):
+            element_name = '-INGREDIENTS' + str(9-i) + '-'
+            gui[element_name].update("")
         update_preparation = recipes[update_name].preparation
         gui['-NAME-'].update(update_name)
-        gui['-INGREDIENTS-'].update(update_ingredients)
         gui['-PREPARATION-'].update(update_preparation)
 gui.close()
 
