@@ -38,6 +38,7 @@ while True:
         for i, ingredient in enumerate(update_ingredients):
             element_name = '-INGREDIENTS' + str(i) + '-'
             gui[element_name].update(ingredient)
+        # current fixed number of ingredients is 10, that's were the numbers come from
         for i in range(10 - len(update_ingredients)):
             element_name = '-INGREDIENTS' + str(9-i) + '-'
             gui[element_name].update("")
