@@ -55,7 +55,7 @@ def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:List) -> sg.Wind
                  [sg.Text(key='-PREPARATION-')]
                  ]
 
-    recipes_layout = [[sg.Column(left_col), sg.Column(right_col)]]
+    recipes_layout = [[sg.Column(left_col), sg.Column(right_col)], [sg.B('Add'), sg.B('Delete'), sg.B('Update')]]
 
     tabgrp = [
         [
