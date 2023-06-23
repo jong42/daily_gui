@@ -49,9 +49,42 @@ def add_recipe(path:str, rec:Recipe) -> None:
     json_data[rec.name] = rec
     save_recipes_to_json(path,json_data)
 
+def delete_recipe(path:str, rec_name:str) -> None:
+    """
+    Deletes a recipe from a json file
+    :param path: string. The location of the json file
+    :param rec_name: string. The name of the recipe to be deleted
+    """
+    recipes = load_recipes_from_json(path)
+    recipes.pop(rec_name)
+    save_recipes_to_json(path, recipes)
+
+def update_recipe(path:str, name:str, new_name:str=None, ing:str=None, prep:str=None) -> None:
+    """
+    Changes the contents of a recipe stored in a json file
+    :param path: string. The location of the json file
+    :param name: string. The existing recipe name
+    :param new_name: string or None. The changed recipe name. If None, the existing name is kept
+    :param ing: string or None. The changed recipe ingredients. If None, the existing ingredients are kept
+    :param prep: string or None. The changed recipe preparation text. If None, the existing preparation text is kept
+    """
+    recipes = load_recipes_from_json(path)
+    if new_name:
+        recipes[new_name] = recipes[name]
+        recipes.pop(name)
+        recipes[new_name].name = new_name
+        name = new_name
+    if ing:
+        recipes[name].ingredients = ing
+    if prep:
+        recipes[name].preparation = prep
+    save_recipes_to_json(path, recipes)
 
 if __name__ == "__main__":
     recipes_path = "/home/jonas/Desktop/daily_gui/data/recipes.json"
     rec = Recipe("Test_recipe",["1","2","3"],"")
-    add_recipe(recipes_path, rec)
+    #add_recipe(recipes_path, rec)
+    #delete_recipe(recipes_path, "Test_recipe")
+    #update_recipe(recipes_path, "Test_recipe", new_name="Changed_name",ing=["4","5","6"], prep="newprep")
+    #delete_recipe(recipes_path, "Changed_name")
 
