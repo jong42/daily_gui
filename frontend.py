@@ -6,6 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import PySimpleGUI as sg
+from recipes_backend import Recipe, add_recipe
 
 
 def draw_figure(canvas: Canvas, figure: Figure) -> FigureCanvasTkAgg:
@@ -28,7 +29,7 @@ def init_layout() -> List[List[sg.PySimpleGUI.Canvas]]:
     return layout
 
 
-def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:List) -> sg.Window:
+def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes: List) -> sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
@@ -36,26 +37,32 @@ def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes:List) -> sg.Wind
     :returns: window. PySimpleGUI window.
 
     """
-    recnames = [v.name for k,v in recipes.items()]
+    recnames = [v.name for k, v in recipes.items()]
 
-    left_col = [[sg.Listbox(values = recnames, size=(20, 10), key='-LIST-', enable_events=True)]]
-    right_col = [[sg.Text(key='-NAME-')],
-                 [sg.Text("Ingredients:")],
-                 [sg.Text(key='-INGREDIENTS0-')],
-                 [sg.Text(key='-INGREDIENTS1-')],
-                 [sg.Text(key='-INGREDIENTS2-')],
-                 [sg.Text(key='-INGREDIENTS3-')],
-                 [sg.Text(key='-INGREDIENTS4-')],
-                 [sg.Text(key='-INGREDIENTS5-')],
-                 [sg.Text(key='-INGREDIENTS6-')],
-                 [sg.Text(key='-INGREDIENTS7-')],
-                 [sg.Text(key='-INGREDIENTS8-')],
-                 [sg.Text(key='-INGREDIENTS9-')],
-                 [sg.Text("Preparation:")],
-                 [sg.Text(key='-PREPARATION-')]
-                 ]
+    left_col = [
+        [sg.Listbox(values=recnames, size=(20, 10), key="-LIST-", enable_events=True)]
+    ]
+    right_col = [
+        [sg.Text(key="-NAME-")],
+        [sg.Text("Ingredients:")],
+        [sg.Text(key="-INGREDIENTS0-")],
+        [sg.Text(key="-INGREDIENTS1-")],
+        [sg.Text(key="-INGREDIENTS2-")],
+        [sg.Text(key="-INGREDIENTS3-")],
+        [sg.Text(key="-INGREDIENTS4-")],
+        [sg.Text(key="-INGREDIENTS5-")],
+        [sg.Text(key="-INGREDIENTS6-")],
+        [sg.Text(key="-INGREDIENTS7-")],
+        [sg.Text(key="-INGREDIENTS8-")],
+        [sg.Text(key="-INGREDIENTS9-")],
+        [sg.Text("Preparation:")],
+        [sg.Text(key="-PREPARATION-")],
+    ]
 
-    recipes_layout = [[sg.Column(left_col), sg.Column(right_col)], [sg.B('Add'), sg.B('Delete'), sg.B('Update')]]
+    recipes_layout = [
+        [sg.Column(left_col), sg.Column(right_col)],
+        [sg.B("Add"), sg.B("Delete"), sg.B("Update")],
+    ]
 
     tabgrp = [
         [
@@ -137,3 +144,40 @@ def add_fig_to_gui(
     ax2.set_ylabel("Precipitation Probability", color="blue")
     # Instead of plt.show
     draw_figure(gui["figCanvas"].TKCanvas, fig)
+
+
+def show_gui(gui: sg.Window, recipes_path: str, recipes: Dict) -> None:
+    """
+    displays the GUI.
+
+    :param gui: sg.Window.
+    :param recipes_path: string. the location of the recipes json file
+    :param recipes: Dict. A dictionary containing Recipe objects
+    :return:
+    """
+    while True:
+        event, values = gui.read()
+        if event == sg.WIN_CLOSED:
+            break
+        # clicking on the list in recipes tab
+        elif event == "-LIST-":
+            update_name = values["-LIST-"][0]
+            update_ingredients = recipes[update_name].ingredients
+            for i, ingredient in enumerate(update_ingredients):
+                element_name = "-INGREDIENTS" + str(i) + "-"
+                gui[element_name].update(ingredient)
+            # current fixed number of ingredients is 10, that's were the numbers come from
+            for i in range(10 - len(update_ingredients)):
+                element_name = "-INGREDIENTS" + str(9 - i) + "-"
+                gui[element_name].update("")
+            update_preparation = recipes[update_name].preparation
+            gui["-NAME-"].update(update_name)
+            gui["-PREPARATION-"].update(update_preparation)
+        # Button Add in Recipes tab
+        elif event == "Add":
+            # TODO: Refresh recipe list while window is open
+            name = sg.popup_get_text("Add name")
+            ingredients = sg.popup_get_text("Add ingredients")
+            preparation = sg.popup_get_text("Add preparation text")
+            add_recipe(recipes_path, Recipe(name, ingredients, preparation))
+    gui.close()
