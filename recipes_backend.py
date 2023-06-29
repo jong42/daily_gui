@@ -8,83 +8,85 @@ class Recipe:
         self.ingredients = ingredients
         self.preparation = preparation
 
-def load_recipes_from_json(path:str) -> Dict:
-    """
-    Loads a dictionary of Recipe objects from a json file
-    :param path: the location of the json file
-    :return: Dict. A dictionary containing Recipe objects
-    """
-    recipes = {}
-    with open(path, "r", encoding='utf-8') as recipes_data:
-        recipes_json = json.load(recipes_data)
-        for entry in recipes_json:
-            name = recipes_json[entry]['name']
-            ingredients = recipes_json[entry]['ingredients']
-            preparation = recipes_json[entry]['preparation']
-            recipes[name] = Recipe(name, ingredients, preparation)
-    return recipes
 
-def save_recipes_to_json(path:str, recipes:Dict) -> None:
-    """
-    Saves a dictionary of Recipe objects to a json file
-    :param path: string. The location where the json file should be created. Overwrites any existing file with the same name
-    :param recipes: Dictionary containing Recipe objects
-    """
-    recipes_dict = {}
-    for k,v in recipes.items():
-        recipes_dict[k] = {}
-        recipes_dict[k]["name"] = v.name
-        recipes_dict[k]["ingredients"] = v.ingredients
-        recipes_dict[k]["preparation"] = v.preparation
-    with open(path, "w", encoding='utf-8') as f:
-        json.dump(recipes_dict, f)
+class RecipeCollection:
+    def __init__(self, recipes: List[Recipe]):
+        self.recipes = recipes
 
-def add_recipe(path:str, rec:Recipe) -> None:
-    """
-    Adds a recipe to a json file
-    :param path: string. The location of the json file
-    :param rec: Recipe. The recipe to be added
-    """
-    json_data = load_recipes_from_json(path)
-    json_data[rec.name] = rec
-    save_recipes_to_json(path,json_data)
+    def load_from_json(self, path: str) -> None:
+        """
+        Loads Recipe objects from a json file
+        :param path: the location of the json file
+        """
+        recipes = []
+        with open(path, "r", encoding="utf-8") as recipes_data:
+            recipes_json = json.load(recipes_data)
+            for entry in recipes_json:
+                name = recipes_json[entry]["name"]
+                ingredients = recipes_json[entry]["ingredients"]
+                preparation = recipes_json[entry]["preparation"]
+                recipes.append(Recipe(name, ingredients, preparation))
+        self.recipes = recipes
 
-def delete_recipe(path:str, rec_name:str) -> None:
-    """
-    Deletes a recipe from a json file
-    :param path: string. The location of the json file
-    :param rec_name: string. The name of the recipe to be deleted
-    """
-    recipes = load_recipes_from_json(path)
-    recipes.pop(rec_name)
-    save_recipes_to_json(path, recipes)
+    def save_to_json(self, path: str) -> None:
+        """
+        Saves all recipes to a json file
+        :param path: string. The location where the json file should be created. Overwrites existing files.
+        """
+        recipes_dict = {}
+        for recipe in self.recipes:
+            recipes_dict[recipe.name] = {}
+            recipes_dict[recipe.name]["name"] = recipe.name
+            recipes_dict[recipe.name]["ingredients"] = recipe.ingredients
+            recipes_dict[recipe.name]["preparation"] = recipe.preparation
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(recipes_dict, f)
 
-def update_recipe(path:str, name:str, new_name:str=None, ing:str=None, prep:str=None) -> None:
-    """
-    Changes the contents of a recipe stored in a json file
-    :param path: string. The location of the json file
-    :param name: string. The existing recipe name
-    :param new_name: string or None. The changed recipe name. If None, the existing name is kept
-    :param ing: string or None. The changed recipe ingredients. If None, the existing ingredients are kept
-    :param prep: string or None. The changed recipe preparation text. If None, the existing preparation text is kept
-    """
-    recipes = load_recipes_from_json(path)
-    if new_name:
-        recipes[new_name] = recipes[name]
-        recipes.pop(name)
-        recipes[new_name].name = new_name
-        name = new_name
-    if ing:
-        recipes[name].ingredients = ing
-    if prep:
-        recipes[name].preparation = prep
-    save_recipes_to_json(path, recipes)
+    def get_index_by_name(self, name: str) -> int:
+        """
+        Find the index in the recipe list of a recipe with a given name
+        :param name: string. name of the recipe
+        :return: i. Integer. index of the recipe in the recipes list
+        """
+        for i, recipe in enumerate(self.recipes):
+            if recipe.name == name:
+                return i
 
-if __name__ == "__main__":
-    recipes_path = "/home/jonas/Desktop/daily_gui/data/recipes.json"
-    rec = Recipe("Test_recipe",["1","2","3"],"")
-    #add_recipe(recipes_path, rec)
-    #delete_recipe(recipes_path, "Test_recipe")
-    #update_recipe(recipes_path, "Test_recipe", new_name="Changed_name",ing=["4","5","6"], prep="newprep")
-    #delete_recipe(recipes_path, "Changed_name")
+    def add(self, recipe: Recipe) -> None:
+        """
+        Adds a recipe
+        :param recipe: Recipe. The recipe to be added
+        """
+        self.recipes.append(recipe)
 
+    def delete(self, name: str) -> None:
+        """
+        Deletes a recipe
+        :param name: string. The name of the recipe to be deleted
+        """
+        recipes_to_delete = []
+        for recipe in self.recipes:
+            if recipe.name == name:
+                recipes_to_delete.append(recipe)
+        for recipe in recipes_to_delete:
+            self.recipes.remove(recipe)
+
+    def update(
+        self, name: str, new_name: str = None, ing: str = None, prep: str = None
+    ) -> None:
+        """
+        Changes the contents of a recipe
+        :param name: string. The existing recipe name
+        :param new_name: string or None. The changed recipe name. If None, the existing name is kept
+        :param ing: string or None. The changed recipe ingredients. If None, the existing ingredients are kept
+        :param prep: string or None. The changed recipe preparation text. If None, the existing preparation text is kept
+        """
+        for recipe in self.recipes:
+            if recipe.name == name:
+                recipe_to_update = recipe
+        if new_name:
+            recipe_to_update.name = new_name
+        if ing:
+            recipe_to_update.ingredients = ing
+        if prep:
+            recipe_to_update.preparation = prep

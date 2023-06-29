@@ -1,10 +1,9 @@
-import PySimpleGUI as sg
 from weather_backend import (
     get_weather_data,
     get_minmax_values,
     get_weather_symbols,
 )
-from recipes_backend import load_recipes_from_json, delete_recipe, update_recipe
+from recipes_backend import RecipeCollection
 from frontend import init_layout, init_gui, add_fig_to_gui, show_gui
 
 location = "Jena"
@@ -18,7 +17,9 @@ minmax_timestamps, minmax_temps = get_minmax_values(timestamps, temps)
 symbols = get_weather_symbols(weather, weather_symbols_path)
 
 # Get recipes
-recipes = load_recipes_from_json(recipes_path)
+recipes = RecipeCollection([])
+recipes.load_from_json(recipes_path)
+
 
 # Construct GUI
 layout = init_layout()

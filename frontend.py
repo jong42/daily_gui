@@ -6,7 +6,7 @@ from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.offsetbox import OffsetImage, AnnotationBbox
 import PySimpleGUI as sg
-from recipes_backend import Recipe, add_recipe
+from recipes_backend import Recipe, RecipeCollection
 
 
 def draw_figure(canvas: Canvas, figure: Figure) -> FigureCanvasTkAgg:
@@ -29,15 +29,18 @@ def init_layout() -> List[List[sg.PySimpleGUI.Canvas]]:
     return layout
 
 
-def init_gui(layout: List[List[sg.PySimpleGUI.Canvas]], recipes: List) -> sg.Window:
+def init_gui(
+    layout: List[List[sg.PySimpleGUI.Canvas]], recipes: RecipeCollection
+) -> sg.Window:
     """
     Construct a GUI with PySimpleGUI. Figures have to be added afterwards, see add_fig_to_gui()
 
     :param layout: list of lists containing a PySimpleGUI Canvas. A basic blank canvas
+    :param recipes: RecipeCollection. The recipes to be displayed in the gui
     :returns: window. PySimpleGUI window.
 
     """
-    recnames = [v.name for k, v in recipes.items()]
+    recnames = [recipe.name for recipe in recipes.recipes]
 
     left_col = [
         [sg.Listbox(values=recnames, size=(20, 10), key="-LIST-", enable_events=True)]
@@ -146,13 +149,13 @@ def add_fig_to_gui(
     draw_figure(gui["figCanvas"].TKCanvas, fig)
 
 
-def show_gui(gui: sg.Window, recipes_path: str, recipes: Dict) -> None:
+def show_gui(gui: sg.Window, recipes_path: str, recipes: RecipeCollection) -> None:
     """
     displays the GUI.
 
     :param gui: sg.Window.
     :param recipes_path: string. the location of the recipes json file
-    :param recipes: Dict. A dictionary containing Recipe objects
+    :param recipes: RecipeCollection. The recipes to be displayed in the gui.
     :return:
     """
     while True:
@@ -162,7 +165,8 @@ def show_gui(gui: sg.Window, recipes_path: str, recipes: Dict) -> None:
         # clicking on the list in recipes tab
         elif event == "-LIST-":
             update_name = values["-LIST-"][0]
-            update_ingredients = recipes[update_name].ingredients
+            index = recipes.get_index_by_name(update_name)
+            update_ingredients = recipes.recipes[index].ingredients
             for i, ingredient in enumerate(update_ingredients):
                 element_name = "-INGREDIENTS" + str(i) + "-"
                 gui[element_name].update(ingredient)
@@ -170,7 +174,7 @@ def show_gui(gui: sg.Window, recipes_path: str, recipes: Dict) -> None:
             for i in range(10 - len(update_ingredients)):
                 element_name = "-INGREDIENTS" + str(9 - i) + "-"
                 gui[element_name].update("")
-            update_preparation = recipes[update_name].preparation
+            update_preparation = recipes.recipes[index].preparation
             gui["-NAME-"].update(update_name)
             gui["-PREPARATION-"].update(update_preparation)
         # Button Add in Recipes tab
@@ -179,5 +183,6 @@ def show_gui(gui: sg.Window, recipes_path: str, recipes: Dict) -> None:
             name = sg.popup_get_text("Add name")
             ingredients = sg.popup_get_text("Add ingredients")
             preparation = sg.popup_get_text("Add preparation text")
-            add_recipe(recipes_path, Recipe(name, ingredients, preparation))
+            recipes.add(Recipe(name, ingredients, preparation))
+            recipes.save_to_json(recipes_path)
     gui.close()
