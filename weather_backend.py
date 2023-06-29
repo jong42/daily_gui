@@ -125,7 +125,9 @@ def get_weather_symbols(weather: List[str], path: str) -> List:
     return symbols
 
 
-def get_weather_data(weather_data_path: str, location: str) -> Tuple[List[str], List[float], List[str], List[float]]:
+def get_weather_data(
+    weather_data_path: str, location: str
+) -> Tuple[List[str], List[float], List[str], List[float]]:
     """
     Checks if weather data was already downloaded for the current day. Downloads weather data if this is not the case.
     Returns the first 20 values of the weather data

@@ -1,5 +1,5 @@
 import PySimpleGUI as sg
-from backend import (
+from weather_backend import (
     get_weather_data,
     get_minmax_values,
     get_weather_symbols,
