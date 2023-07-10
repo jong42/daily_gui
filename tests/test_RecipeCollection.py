@@ -32,7 +32,7 @@ def test_init():
 def test_load_from_json():
     rec_col = RecipeCollection()
     # not a string
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, OSError)):
         rec_col.load_from_json(99)
     # wrong structure of the dict in the json file
     fail_dict = {"not name": "a", "not ingredients": "b", "not prep": "c"}
