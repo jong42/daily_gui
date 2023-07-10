@@ -54,14 +54,14 @@ class RecipeCollection:
 
     def add(self, recipe: Recipe) -> None:
         """
-        Adds a recipe
+        Adds a recipe to the collection
         :param recipe: Recipe. The recipe to be added
         """
         self.recipes.append(recipe)
 
     def delete(self, name: str) -> None:
         """
-        Deletes a recipe
+        Deletes a recipe from the collection
         :param name: string. The name of the recipe to be deleted
         """
         recipes_to_delete = []
@@ -72,13 +72,13 @@ class RecipeCollection:
             self.recipes.remove(recipe)
 
     def update(
-        self, name: str, new_name: str = None, ing: str = None, prep: str = None
+        self, name: str, new_name: str = None, ing: List[str] = None, prep: str = None
     ) -> None:
         """
         Changes the contents of a recipe
         :param name: string. The existing recipe name
         :param new_name: string or None. The changed recipe name. If None, the existing name is kept
-        :param ing: string or None. The changed recipe ingredients. If None, the existing ingredients are kept
+        :param ing: List of strings or None. The changed recipe ingredients. If None, the existing ingredients are kept
         :param prep: string or None. The changed recipe preparation text. If None, the existing preparation text is kept
         """
         for recipe in self.recipes:
