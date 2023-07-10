@@ -10,8 +10,16 @@ class Recipe:
 
 
 class RecipeCollection:
-    def __init__(self, recipes: List[Recipe]):
-        self.recipes = recipes
+    def __init__(self, recipes: List[Recipe] | Recipe = []):
+        if isinstance(recipes, list):
+            for recipe in recipes:
+                if not isinstance(recipe, Recipe):
+                    raise TypeError(str(recipe) + "is not of type Recipe")
+            self.recipes = recipes
+        elif isinstance(recipes, Recipe):
+            self.recipes = [recipes]
+        else:
+            raise TypeError(str(recipes) + "is neither a Recipe nor a list of Recipes")
 
     def load_from_json(self, path: str) -> None:
         """
