@@ -53,22 +53,29 @@ class RecipeCollection:
         with open(path, "w", encoding="utf-8") as f:
             json.dump(recipes_dict, f)
 
-    def get_index_by_name(self, name: str) -> int:
+    def get_index_by_name(self, name: str) -> List[int]:
         """
         Find the index in the recipe list of a recipe with a given name
         :param name: string. name of the recipe
-        :return: i. Integer. index of the recipe in the recipes list
+        :return: i. List of Integers. indices of the recipe in the recipes list
         """
+        indices = []
         for i, recipe in enumerate(self.recipes):
             if recipe.name == name:
-                return i
+                indices.append(i)
+        if not indices:
+            raise ValueError(str(name) + "is not one of the recipe names")
+        return indices
 
     def add(self, recipe: Recipe) -> None:
         """
         Adds a recipe to the collection
         :param recipe: Recipe. The recipe to be added
         """
-        self.recipes.append(recipe)
+        if isinstance(recipe, Recipe):
+            self.recipes.append(recipe)
+        else:
+            raise TypeError(str(recipe) + "is not of type Recipe")
 
     def delete(self, name: str) -> None:
         """
@@ -79,6 +86,8 @@ class RecipeCollection:
         for recipe in self.recipes:
             if recipe.name == name:
                 recipes_to_delete.append(recipe)
+        if not recipes_to_delete:
+            raise ValueError(str(name) + "is not one of the recipe names")
         for recipe in recipes_to_delete:
             self.recipes.remove(recipe)
 
@@ -92,12 +101,18 @@ class RecipeCollection:
         :param ing: List of strings or None. The changed recipe ingredients. If None, the existing ingredients are kept
         :param prep: string or None. The changed recipe preparation text. If None, the existing preparation text is kept
         """
+        name_exists = False
         for recipe in self.recipes:
             if recipe.name == name:
                 recipe_to_update = recipe
-        if new_name:
-            recipe_to_update.name = new_name
-        if ing:
-            recipe_to_update.ingredients = ing
-        if prep:
-            recipe_to_update.preparation = prep
+                name_exists = True
+        if not name_exists:
+            raise ValueError(str(name) + "is not one of the existing recipe names")
+        indices = self.get_index_by_name(name)
+        for index in indices:
+            if new_name:
+                self.recipes[index].name = new_name
+            if ing:
+                self.recipes[index].ingredients = ing
+            if prep:
+                self.recipes[index].preparation = prep

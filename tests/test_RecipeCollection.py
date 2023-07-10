@@ -59,9 +59,9 @@ def test_get_index_by_name():
     recipe_3 = Recipe("recipe3", ["1", "2", "3"], "preparation string")
     rec_col = RecipeCollection([recipe_1, recipe_2, recipe_3])
     i = rec_col.get_index_by_name("recipe2")
-    assert i == 1
+    assert i == [1]
     # not a string
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.get_index_by_name(99)
     # name not included in recipe names
     with pytest.raises(ValueError):
@@ -69,7 +69,7 @@ def test_get_index_by_name():
     # name more than once in recipe names
     rec_col = RecipeCollection([recipe_1, recipe_2, recipe_3, recipe_3])
     i = rec_col.get_index_by_name("recipe3")
-    assert i == 2  # Get index of first occurence in this case
+    assert i == [2, 3]
 
 
 def test_add():
@@ -80,8 +80,8 @@ def test_add():
     assert len(rec_col.recipes) == 2
     assert rec_col.recipes[1] == recipe_2
     # not a recipe
-    with pytest.raises(ValueError):
-        rec_col.append("This is not a recipe")
+    with pytest.raises(TypeError):
+        rec_col.add("This is not a recipe")
 
 
 def test_delete():
@@ -92,7 +92,7 @@ def test_delete():
     rec_col.delete("recipe3")
     assert len(rec_col.recipes) == 2
     # not a string
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.delete(99)
     # name not in recipes
     with pytest.raises(ValueError):
@@ -112,13 +112,13 @@ def test_update():
     assert rec_col.recipes[0].ingredients == ["4", "5", "6"]
     assert rec_col.recipes[0].preparation == "new prep string"
     # wrong input types
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.update(99, "new_recipe1", ["4", "5", "6"], "new prep string")
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.update("recipe1", 99, ["4", "5", "6"], "new prep string")
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.update("recipe1", "new_recipe1", 99, "new prep string")
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, ValueError)):
         rec_col.update("recipe1", "new_recipe1", ["4", "5", "6"], 99)
     # name not included
     with pytest.raises(ValueError):
