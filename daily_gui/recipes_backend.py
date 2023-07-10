@@ -31,8 +31,8 @@ class RecipeCollection:
             recipes_json = json.load(recipes_data)
 
             for entry in recipes_json:
-                if not isinstance(entry, dict):
-                    raise KeyError(str(entry) + "is not a Dictionary")
+                if not isinstance(recipes_json[entry], dict):
+                    raise KeyError(str(recipes_json[entry]) + "is not a Dictionary")
                 name = recipes_json[entry]["name"]
                 ingredients = recipes_json[entry]["ingredients"]
                 preparation = recipes_json[entry]["preparation"]
