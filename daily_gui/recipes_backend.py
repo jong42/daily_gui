@@ -29,7 +29,10 @@ class RecipeCollection:
         recipes = []
         with open(path, "r", encoding="utf-8") as recipes_data:
             recipes_json = json.load(recipes_data)
+
             for entry in recipes_json:
+                if not isinstance(entry, dict):
+                    raise KeyError(str(entry) + "is not a Dictionary")
                 name = recipes_json[entry]["name"]
                 ingredients = recipes_json[entry]["ingredients"]
                 preparation = recipes_json[entry]["preparation"]
