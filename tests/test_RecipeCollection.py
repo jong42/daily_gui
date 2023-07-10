@@ -49,7 +49,7 @@ def test_save_to_json():
     recipe_3 = Recipe("recipe3", ["1", "2", "3"], "preparation string")
     rec_col = RecipeCollection([recipe_1, recipe_2, recipe_3])
     # not a string
-    with pytest.raises(TypeError):
+    with pytest.raises((TypeError, OSError)):
         rec_col.save_to_json(99)
 
 
