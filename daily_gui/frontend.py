@@ -165,7 +165,7 @@ def show_gui(gui: sg.Window, recipes_path: str, recipes: RecipeCollection) -> No
         # clicking on the list in recipes tab
         elif event == "-LIST-":
             update_name = values["-LIST-"][0]
-            index = recipes.get_index_by_name(update_name)
+            index = recipes.get_index_by_name(update_name)[0]
             update_ingredients = recipes.recipes[index].ingredients
             for i, ingredient in enumerate(update_ingredients):
                 element_name = "-INGREDIENTS" + str(i) + "-"
